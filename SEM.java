@@ -1,3 +1,9 @@
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.Buffer;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -7,9 +13,10 @@ import java.util.Scanner;
 
 public class SEM implements studentEnrolmentManagement {
     private static ArrayList<studentEnrolment> studentEnrolmentsList = new ArrayList<studentEnrolment>(); 
-   
+    
     private static ArrayList<Student> studentList = new ArrayList<Student>();
     private static ArrayList<Course> courseList = new ArrayList<Course>();
+    private static String printMessage;
  private static SEM instance;
 
  
@@ -86,6 +93,10 @@ public class SEM implements studentEnrolmentManagement {
         }
         return null;
     }
+    // for updating student
+    public ArrayList<studentEnrolment> getStudentEnrollment(){
+        return studentEnrolmentsList;
+    }
     //check if student exist using sudentID input from user
    public boolean checkID(String studentID){
        for(Student s : studentList){
@@ -133,7 +144,7 @@ public class SEM implements studentEnrolmentManagement {
      
    }
    // take student id using scanner and check if student exist in the system
-   private String addStudentScan(){
+   public String addStudentScan(){
        String studentID = null;
 
        while(studentID==null){
@@ -151,7 +162,7 @@ public class SEM implements studentEnrolmentManagement {
     return studentID;
    }
     // take course id using scanner and check if course exist in the system
-     private String addCourseScan(){
+     public String addCourseScan(){
        String courseID = null;
 
        while(courseID==null){
@@ -169,7 +180,7 @@ public class SEM implements studentEnrolmentManagement {
     return courseID;
    }
     // take Semester using scanner and check if user enter valid semester
-   private String addSemScan(){
+   public String addSemScan(){
        String semester = null;
        while(semester == null){
            Scanner scanner = new Scanner(System.in);
@@ -193,7 +204,15 @@ public class SEM implements studentEnrolmentManagement {
       
        return studentEnrolment;
    }
-   //
+
+   // get enrollment of a student in a specific semester
+     public studentEnrolment getEnrollment1(String studentID,Course course,String semester){
+     
+       Student student = getStudent(studentID);
+       studentEnrolment studentEnrolment = new studentEnrolment(student,course,semester);
+      
+       return studentEnrolment;
+   }
  
    // check if enrollment is in the system
    public boolean enrollmentCheck(studentEnrolment checkStudentEnrolment){
@@ -257,7 +276,35 @@ public class SEM implements studentEnrolmentManagement {
         }
     }
     
+    
 }
+ public void delete1(String studentID,String semester,Course course){
+    studentEnrolment studentEnrolment = getEnrollment1(studentID,course,semester);
+    if(!enrollmentCheck(studentEnrolment)){
+           // if not print out error
+           System.out.println("Error enrollment does not exist");
+    }else{
+           // if already exist delete enrollment
+        
+            Iterator<studentEnrolment> iterator = studentEnrolmentsList.iterator();
+            studentEnrolment i = new studentEnrolment(); //enrollment
+            while (iterator.hasNext()){
+                i =(studentEnrolment) iterator.next();
+                if(studentEnrolment.getCourse().getcourseID().equals(i.getCourse().getcourseID()) &&
+                   studentEnrolment.getStuddent().getStudentId().equals(i.getStuddent().getStudentId()) &&
+                   studentEnrolment.getSem().equals(i.getSem())){
+                   // enrollment exist
+
+                   iterator.remove();
+                   System.out.println("enrollment removed");
+                   
+             }
+        }
+    }
+    
+    
+}
+
     // GET ALL STUDENTS OF 1 COURSE IN ONE SEMESTER
     public void printStudentsOfOneSem(){
         String courseID = addCourseScan();
@@ -275,21 +322,32 @@ public class SEM implements studentEnrolmentManagement {
         }
     }
     // GET ALL COURSES FOR 1 STUDENT IN 1 SEMESTER 
-      public void printAllCourseForOneStudentInOneSemester(){
+    public void printAllCourseForOneStudentInOneSemester(){
         String studentID = addStudentScan();
+        
         String sem = addSemScan();
         Iterator<studentEnrolment> enrollments = studentEnrolmentsList.iterator(); 
         studentEnrolment enrolment = new studentEnrolment();
+        String printMessage = "all courses of student with id "+studentID+" in semester "+sem+":\n" ;
+        String course;
         System.out.println("all courses of student with id "+studentID+" in semester "+sem+":");
         while(enrollments.hasNext()){
             enrolment = enrollments.next();
             if(enrolment.getStuddent().getStudentId().equals(studentID) &&
-               enrolment.getSem().equals(sem)
-            ){
+            enrolment.getSem().equals(sem)
+            )
+            {
+                course = enrolment.getCourse().getcourseID();
                 System.out.println(enrolment.getCourse().getcourseID());
+                printMessage += course + "\n";
             }
         }
+        
+        
+        
     }
+   
+    
     // GET ALL COURSES OFFERED IN ONE SEMESTER
     public void printAllCoursesInOneSemester(){
         
@@ -326,6 +384,7 @@ public class SEM implements studentEnrolmentManagement {
           studentEnrolment.getCourse().getcourseID() + " of semester "+ 
           studentEnrolment.getSem() );
     }
+    // add to file
     // print all enrollments 
     public void getAll(){
         for(studentEnrolment i : studentEnrolmentsList){
