@@ -1,0 +1,2 @@
+all courses of student with id S101312 in semester 2020C:
+COSC4030
