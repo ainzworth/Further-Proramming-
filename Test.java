@@ -45,26 +45,12 @@ public class Test {
                         case 1: getFileName();if(fileName != null){prevOption = 1;makeList();}; break;
     
                     }
-                    }   catch (Exception ex){
-                   
+                    } catch (Exception ex){
+                    System.out.println("Please enter an integer value greter or equal to 0 and less than " + options1.length);
                     scanner.next();
                     
                 }
-                // }else if(prevOption == 1){
-                //     printMenu(options2);
-                //     try{
-                //         option = scanner.nextInt();
-
-                //         switch(option){
-                //             case 0: fileName = null;prevOption = -1; break;
-                //             case 1: readFile();break;
-                //             case 2: makeList();prevOption=2;break;// add data infile into the system
-                //         }
-                //     } catch(Exception ex){
-                //         System.out.println(ex);
-                //         System.out.println("Please enter an integer value between 0 and " + options2.length);
-                //         scanner.next();
-                //     }
+      
                 }else if(prevOption == 1){
                     printMenu(options2);
                        try{
@@ -107,12 +93,12 @@ public class Test {
                         scanner.next();
                     }
                 }else if(prevOption == 2){
-                    printMenu(UpdateOption);
                     // print all course of that student
-                    System.out.println("enrolled courses of student with id "+CurrentstudentID+" semester "+Currentsemester+":");
+                    System.out.println("----------------- \nenrolled courses of student with id "+CurrentstudentID+" semester "+Currentsemester+":\n----------------- \n");
                     for(Course i : currentCourseList){
-                        System.out.print(i.getcourseID());
+                        System.out.println(i.getcourseID());
                     }
+                    printMenu(UpdateOption);
                        try{
                         option = scanner.nextInt();
                         //{"1-Add course","2- delete course","0- return to enrollment menu"};
@@ -384,6 +370,23 @@ public class Test {
   static void add(){
         String courseID = sem.addCourseScan();
         sem.addEnrollment1(CurrentstudentID, courseID, Currentsemester);   
+         if(!currentUpdatingEnrollment.isEmpty()){
+                        currentUpdatingEnrollment.clear();
+                    }
+                     if(!currentCourseList.isEmpty()){
+                        currentCourseList.clear();
+                    }
+          
+      for(studentEnrolment i : sem.getStudentEnrollment()){
+                        if(i.getStuddent().getStudentId().equals(CurrentstudentID) && i.getSem().equals(Currentsemester)){
+                            currentUpdatingEnrollment.add(i);
+                                 if(!checkCourse(i.getCourse().getcourseID())){
+
+                                currentCourseList.add(i.getCourse());
+                            }
+                           
+                        }
+                    }
   }
 
   
