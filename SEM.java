@@ -13,11 +13,9 @@ import java.util.Scanner;
 
 public class SEM implements studentEnrolmentManagement {
     private static ArrayList<studentEnrolment> studentEnrolmentsList = new ArrayList<studentEnrolment>(); 
-    
     private static ArrayList<Student> studentList = new ArrayList<Student>();
     private static ArrayList<Course> courseList = new ArrayList<Course>();
-    private static String printMessage;
- private static SEM instance;
+    private static SEM instance;
 
  
 
@@ -232,7 +230,7 @@ public class SEM implements studentEnrolmentManagement {
         return false;
    }
    // this function will be put into the menu to take input and check if student
-   // enrollment exist then add then print i have no idea wtf
+   // enrollment exist 
    public void addEnrollmentScan(){
     // take user input
        studentEnrolment studentEnrolment = getEnrollment();
